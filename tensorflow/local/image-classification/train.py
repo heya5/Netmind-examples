@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     print('Number of devices: {}'.format(num_gpus))
 
-    global_batch_size = args.batch_size *  num_gpus
+    global_batch_size = args.per_device_train_batch_size *  num_gpus
 
     train_ds = tf.keras.preprocessing.image_dataset_from_directory(
         args.data,
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 
 
-        optimizer = tf.keras.optimizers.SGD(args.initial_learning_rate *  num_gpus)
+        optimizer = tf.keras.optimizers.SGD(args.learning_rate *  num_gpus)
 
         model.compile(
             optimizer=optimizer,
@@ -105,7 +105,7 @@ if __name__ == '__main__':
         validation_data=test_data_iterator,
         steps_per_epoch= train_num  // global_batch_size , 
         validation_steps= test_num // global_batch_size ,
-        epochs=args.epoch_num,
+        epochs=args.num_train_epochs,
         callbacks=[model_callback,tensorboard_callback]
     )
 
